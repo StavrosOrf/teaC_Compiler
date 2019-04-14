@@ -67,6 +67,9 @@
 %type <str> func_param
 %type <str> func_call
 %type <str> commands
+%type <str> if_state
+%type <str> while_state
+
 
 
 
@@ -94,7 +97,7 @@ body:
   KW_LET decl ';'          { $$ = template("%s;",$2);}
 | KW_CONST decl_const ';'  { $$ = template("%s;",$2);}              
 | func_decl                
-| commands ';'
+| commands 
 | KW_CONST defined_func ";;;;"
 ;
 
@@ -102,9 +105,22 @@ defined_func:  KW_INT     {$$ = template("int");}
 ;
 
 commands:
-  func_call               { $$ = template("%s;",$1);}
-| IDENTIFIER ASSIGN expr  { $$ = template("%s = %s ;",$1,$3);}
-| return_expr 
+  func_call ';'                           { $$ = template("%s;",$1);}
+| IDENTIFIER ASSIGN expr ';'              { $$ = template("%s = %s ;",$1,$3);}
+| return_expr ';'
+| KW_IF if_state KW_FI                    { $$ = template("%s",$2);}
+| KW_WHILE expr KW_LOOP while_state KW_POOL  { $$ = template("while(%s){\n %s \n} ",$2,$4);}
+;
+
+while_state:
+  commands
+| commands  while_state  { $$ = template("%s\n %s",$1,$2);}
+
+if_state: 
+  %empty                 { $$ = template("");}
+| expr KW_THEN if_state  { $$ = template("if(%s){\n %s}",$1,$3);}
+| commands  if_state     { $$ = template("%s\n %s",$1,$2);}
+| KW_ELSE if_state       { $$ = template("}else{ \n %s",$2);}
 ;
 
 type:
@@ -123,14 +139,14 @@ const_type:
 ;
 
 func_body:
-  %empty                  { $$ = template("");}
-| KW_LET decl             { $$ = template("%s;",$2);}
-| commands                { $$ = template("%s",$1);}
-| func_body ';' func_body     { $$ = template("%s \n %s",$1,$3);}
+  %empty                    { $$ = template("");}
+| KW_LET decl ';' func_body { $$ = template("%s;\n %s",$2,$4);}
+| commands func_body        { $$ = template("%s \n %s",$1,$2);}
+
 ;
 
 func_decl:
-  KW_CONST IDENTIFIER ASSIGN '(' func_par_decl ')' ':' type '{' func_body '}'{ $$ = template("%s %s(%s){\n %s } ",$8,$2,$5,$10); }
+  KW_CONST IDENTIFIER ASSIGN '(' func_par_decl ')' ':' type '{' func_body '}'{ $$ = template("%s %s(%s)\n {\n %s} ",$8,$2,$5,$10); }
 
 ;
 

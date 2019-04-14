@@ -1,25 +1,49 @@
+
+
+
+while(d<=c)loop
+   g <-(not 15) % cube(b+3,x);
+   g <-(not 15) % cube(b+3,x); 
+  pool
+
 const f1 <- (x,y,c:real ,s[]:string):real{ 
  let x ,y <- 15  : int;
  x <- 2+3-4*(4-5)/7;
---hello\:as';as[12''']
-
- g <-(not 15) % cube(b+3,x);
  cube(b+3,x);
- return x*x;}
+  if(a<=b) and (d<=c)then 
+  g <-(not 15) % cube(b+3,x);
+  g <-(not 15) % cube(b+3,x);
+  while(d<=c)loop
+   g <-(not 15) % cube(b+3,x);
+   g <-(not 15) % cube(b+3,x); 
+    if(a<=b) and (d<=c)then 
+  g <-(not 15) % cube(b+3,x);fi
+  pool
+ else
+  g <- 5;
+   if(a<=b) and (d<=c)then 
+  g <-(not 15) % cube(b+3,x);fi
+
+ fi
+ return x*x;   }
+
+(*)
+
 a <-(a<=b) and (d<=c);
 g <-(not 15) % cube(b+3,x);
 b <- x + c[25] and 98;
 const t[8] <- "ahashhjj" : string;
 const t <- true : bool;
 let s[80]<-"1231231231": string;
-let x <- 15 , y : real;(*)
+let x <- 15 , y : real;
 let x ,y <- 15  : int;
 let k <- 1.55 : real;
-const t <- "ahashhjj" : string;*)
+const t <- "ahashhjj" : string;
 const t <- true : bool;
 let s[80]: string;
-
+return 16;
 
 
 --- const f1 <- (x,y,c:real ,s[]:string):real{ return x*x;} -- TO FIX
 -- Return ypr undefined when return missing
+(*)
