@@ -62,6 +62,8 @@ start		return KW_START;
 "%"         return '%';
 "("			return '(';
 ")"			return ')';
+"{"			return '{';
+"}"			return '}';
 "["			return '[';
 "]"			return ']';
 "="			return '=';

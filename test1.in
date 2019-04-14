@@ -1,13 +1,24 @@
 2+3-4*(4-5)/7;
 --hello\:as';as[12''']
-const f1 <- (x:real , s[]:string):real{ return x*x;}
-(*
++5;
+not 15;
+const f1 <- (x,y,c:real ,s[]:string):real{ 
+ let x ,y <- 15  : int;
+ return x*x;}
+
+const t[8] <- "ahashhjj" : string;
+const t <- true : bool;
+let s[80]<-"1231231231": string;
 2+4;
-let x <- 15 , y : int;
+let x <- 15 , y : real;(*)
 let x ,y <- 15  : int;
 2+4;
 let k <- 1.55 : real;
-const t <- "ahashhjj" : string;
+const t <- "ahashhjj" : string;*)
 const t <- true : bool;
-let s[80]: string;*)
+let s[80]: string;
 
+
+
+--- const f1 <- (x,y,c:real ,s[]:string):real{ return x*x;} -- TO FIX
+-- Return ypr undefined when return missing
