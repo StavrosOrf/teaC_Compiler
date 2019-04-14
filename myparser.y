@@ -64,9 +64,18 @@
 %type <str> defined_func
 %type <str> infix_operator
 %type <str> prefix_operator
+%type <str> func_param
+%type <str> func_call
+%type <str> commands
 
+
+
+%left KW_OR
+%left KW_AND
+%left KW_LESS_EQL KW_NOT_EQL '=' '<'
 %left '-' '+'
-%left '*' '/'
+%left '*' '/' '%'
+%right KW_NOT
 
 %%
 
@@ -80,16 +89,22 @@ input:
   }  
 }
 ;
+
 body: 
-  KW_LET decl ';'         { $$ = template("%s;",$2);}
-| KW_CONST decl_const ';'  { $$ = template("%s;",$2);}
-| expr ';'
-| func_decl           { $$ = template("%s",$1);}
-| KW_CONST defined_func
+  KW_LET decl ';'          { $$ = template("%s;",$2);}
+| KW_CONST decl_const ';'  { $$ = template("%s;",$2);}              
+| func_decl                
+| commands ';'
+| KW_CONST defined_func ";;;;"
 ;
 
-defined_func:
-  %empty     {$$ = template("");}
+defined_func:  KW_INT     {$$ = template("int");}
+;
+
+commands:
+  func_call               { $$ = template("%s;",$1);}
+| IDENTIFIER ASSIGN expr  { $$ = template("%s = %s ;",$1,$3);}
+| return_expr 
 ;
 
 type:
@@ -110,13 +125,22 @@ const_type:
 func_body:
   %empty                  { $$ = template("");}
 | KW_LET decl             { $$ = template("%s;",$2);}
-| return_expr             { $$ = template("%s",$1);}
-| func_body ';' func_body { $$ = template("%s \n %s",$1,$3);}
+| commands                { $$ = template("%s",$1);}
+| func_body ';' func_body     { $$ = template("%s \n %s",$1,$3);}
 ;
 
 func_decl:
   KW_CONST IDENTIFIER ASSIGN '(' func_par_decl ')' ':' type '{' func_body '}'{ $$ = template("%s %s(%s){\n %s } ",$8,$2,$5,$10); }
 
+;
+
+func_call: IDENTIFIER '(' func_param ')'     { $$ = template("%s(%s)", $1,$3); }
+;
+
+func_param:
+  %empty                     { $$ = template("");}
+| func_param ',' func_param  { $$ = template("%s,%s",$1,$3);}
+| expr                       { $$ = template("%s",$1); } 
 ;
 
 return_expr:
@@ -163,7 +187,7 @@ infix_operator:
 |'-' { $$ = template("-"); }
 |'*' { $$ = template("*"); }
 |'/' { $$ = template("/"); }
-|'%' { $$ = template("%"); }
+|'%' { $$ = template("%%"); }
 |'=' { $$ = template("=="); }
 |'<' { $$ = template("<"); }
 |KW_NOT_EQL { $$ = template("!="); }
@@ -179,13 +203,14 @@ prefix_operator:
 ;
 
 expr:
-  POSINT
+ POSINT
 | REAL
 | IDENTIFIER
-| '(' expr ')'  { $$ = template("(%s)", $2); }
-| expr infix_operator expr { $$ = template("%s %s %s", $1,$2, $3); }
-| prefix_operator expr { $$ = template("%s %s", $1,$2); }
-
+| IDENTIFIER ARRAY                   { $$ = template("%s%s", $1,$2); }
+| func_call
+| '(' expr ')'                       { $$ = template("(%s)", $2); }
+| expr infix_operator expr           { $$ = template("%s %s %s", $1,$2, $3); }
+| prefix_operator expr               { $$ = template("(%s %s)", $1,$2); }
 ;
 
 %%
