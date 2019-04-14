@@ -1,6 +1,5 @@
 
 
-
 while(d<=c)loop
    g <-(not 15) % cube(b+3,x);
    g <-(not 15) % cube(b+3,x); 
@@ -46,4 +45,20 @@ return 16;
 
 --- const f1 <- (x,y,c:real ,s[]:string):real{ return x*x;} -- TO FIX
 -- Return ypr undefined when return missing
+-- t
+
+
+expr:
+ POSINT
+| REAL
+| IDENTIFIER
+| IDENTIFIER ARRAY                   { $$ = template("%s%s", $1,$2); }
+| func_call
+| '(' expr ')'                       { $$ = template("(%s)", $2); }
+| prefix_operator expr               { $$ = template("(%s %s)", $1,$2); }
+| '+' expr                           { $$ = template("(+%s)",$2); }
+| '-' expr                           { $$ = template("(-%s)",$2); }
+| KW_NOT expr                           { $$ = template("(!%s)",$2); }
+| expr infix_operator expr           { $$ = template("%s %s %s", $1,$2, $3); }
+;
 (*)

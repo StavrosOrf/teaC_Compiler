@@ -70,6 +70,7 @@ start		return KW_START;
 "!="		{return  KW_NOT_EQL;}
 "<"			return '<';
 "<="		{return KW_LESS_EQL;}
+"=>"		{return KW_MAIN_ASSIGN;}
 ";"			return ';';
 ":"			return ':';
 ","			return ',';

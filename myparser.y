@@ -27,7 +27,7 @@
 %token <str> KW_REAL
 %token <str> KW_BOOL
 %token <str> KW_STRING
-
+%token <str> KW_MAIN_ASSIGN
 %token <str> KW_IF
 %token <str> KW_THEN
 %token <str> KW_ELSE
@@ -62,13 +62,12 @@
 %type <str> func_par_decl 
 %type <str> return_expr
 %type <str> defined_func
-%type <str> infix_operator
-%type <str> prefix_operator
 %type <str> func_param
 %type <str> func_call
 %type <str> commands
 %type <str> if_state
 %type <str> while_state
+%type <str> main_body
 
 
 
@@ -99,6 +98,7 @@ body:
 | func_decl                
 | commands 
 | KW_CONST defined_func ";;;;"
+| KW_CONST KW_START ASSIGN '(' ')' ':' KW_INT KW_MAIN_ASSIGN '{' main_body '}'
 ;
 
 defined_func:  KW_INT     {$$ = template("int");}
@@ -110,6 +110,11 @@ commands:
 | return_expr ';'
 | KW_IF if_state KW_FI                    { $$ = template("%s",$2);}
 | KW_WHILE expr KW_LOOP while_state KW_POOL  { $$ = template("while(%s){\n %s \n} ",$2,$4);}
+;
+
+main_body:
+  commands
+| commands  main_body  { $$ = template("%s\n %s",$1,$2);}
 ;
 
 while_state:
@@ -155,7 +160,7 @@ func_call: IDENTIFIER '(' func_param ')'     { $$ = template("%s(%s)", $1,$3); }
 
 func_param:
   %empty                     { $$ = template("");}
-| func_param ',' func_param  { $$ = template("%s,%s",$1,$3);}
+| expr ',' func_param        { $$ = template("%s,%s",$1,$3);}
 | expr                       { $$ = template("%s",$1); } 
 ;
 
@@ -169,8 +174,14 @@ func_par_decl:
 | IDENTIFIER '['']'                         { $$ = template("%s[]",$1); } 
 | IDENTIFIER '['']' ':' type  func_par_decl { $$ = template("%s %s %s[]",$6,$5,$1); }        
 | IDENTIFIER ':' type  func_par_decl        { $$ = template("%s %s %s",$4,$3,$1); } 
-| func_par_decl ',' func_par_decl           { $$ = template("%s , %s",$3,$1); }
+
+| IDENTIFIER  ',' func_par_decl                 { $$ = template("%s,%s ",$3,$1); } 
+| IDENTIFIER '['']'  ',' func_par_decl          { $$ = template("%s %s[]",$5,$1); } 
+| IDENTIFIER '['']' ':' type ',' func_par_decl  { $$ = template("%s %s %s[]",$7,$5,$1); }        
+| IDENTIFIER ':' type  ',' func_par_decl        { $$ = template("%s %s %s",$5,$3,$1); } 
 ;
+
+
 
 data:
   POSINT     
@@ -198,35 +209,29 @@ decl:
 | ':' type                          { $$ = template("%s",$2); }
 ;
 
-infix_operator:
- '+' { $$ = template("+"); }
-|'-' { $$ = template("-"); }
-|'*' { $$ = template("*"); }
-|'/' { $$ = template("/"); }
-|'%' { $$ = template("%%"); }
-|'=' { $$ = template("=="); }
-|'<' { $$ = template("<"); }
-|KW_NOT_EQL { $$ = template("!="); }
-|KW_LESS_EQL { $$ = template("<="); }
-|KW_OR { $$ = template("||"); }
-|KW_AND { $$ = template("&&"); }
-;
-
-prefix_operator:
- '+' { $$ = template("+"); }
-|'-' { $$ = template("-"); }
-|KW_NOT { $$ = template("!"); }
-;
 
 expr:
  POSINT
 | REAL
 | IDENTIFIER
-| IDENTIFIER ARRAY                   { $$ = template("%s%s", $1,$2); }
+| IDENTIFIER ARRAY        { $$ = template("%s%s", $1,$2); }
 | func_call
-| '(' expr ')'                       { $$ = template("(%s)", $2); }
-| expr infix_operator expr           { $$ = template("%s %s %s", $1,$2, $3); }
-| prefix_operator expr               { $$ = template("(%s %s)", $1,$2); }
+| '(' expr ')'            { $$ = template("(%s)", $2); }
+
+| '+' expr                { $$ = template("(+%s)",$2); }
+| '-' expr                { $$ = template("(-%s)",$2); }
+| KW_NOT expr             { $$ = template("(!%s)",$2); }
+| expr '+' expr           { $$ = template("%s + %s", $1,$3); }
+| expr '-' expr           { $$ = template("%s - %s", $1,$3); }
+| expr '*' expr           { $$ = template("%s * %s", $1,$3); }
+| expr '/' expr           { $$ = template("%s / %s", $1,$3); }
+| expr '%' expr           { $$ = template("%s %% %s", $1,$3); }
+| expr '=' expr           { $$ = template("%s == %s", $1,$3); }
+| expr '<' expr           { $$ = template("%s < %s", $1,$3); }
+| expr KW_NOT_EQL expr    { $$ = template("%s != %s", $1,$3); }
+| expr KW_LESS_EQL expr   { $$ = template("%s <= %s", $1,$3); }
+| expr KW_OR expr         { $$ = template("%s || %s", $1,$3); }
+| expr KW_AND expr        { $$ = template("%s && %s", $1,$3); }
 ;
 
 %%
