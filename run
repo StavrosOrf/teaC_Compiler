@@ -1,0 +1,8 @@
+#!/bin/bash
+
+bison -d -v -r all myparser.y
+flex mylexer.l
+gcc -o mycomp lex.yy.c myparser.tab.c cgen.c -lfl
+./mycomp < test1.in >ex.c
+
+cat ex.c
