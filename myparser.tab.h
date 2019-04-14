@@ -73,7 +73,13 @@ extern int yydebug;
     KW_RETURN = 283,
     KW_START = 284,
     KW_TRUE = 285,
-    KW_FALSE = 286
+    KW_FALSE = 286,
+    F_readS = 287,
+    F_readI = 288,
+    F_readR = 289,
+    F_writeS = 290,
+    F_writeI = 291,
+    F_writeR = 292
   };
 #endif
 
@@ -87,7 +93,7 @@ union YYSTYPE
   char* str;
   int num;
 
-#line 91 "myparser.tab.h" /* yacc.c:1909  */
+#line 97 "myparser.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

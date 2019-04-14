@@ -48,6 +48,13 @@
 %token <str> KW_TRUE
 %token <str> KW_FALSE
 
+%token <str> F_readS
+%token <str> F_readI
+%token <str> F_readR
+%token <str> F_writeS
+%token <str> F_writeI
+%token <str> F_writeR
+
 %start input
 
 %type <str> body
@@ -68,6 +75,7 @@
 %type <str> if_state
 %type <str> while_state
 %type <str> main_body
+%type <str> part3
 
 
 
@@ -83,29 +91,45 @@
 
 input:  
   %empty
-| input body 
+| part3 
 { 
   if (yyerror_count == 0) {
-    //puts(c_prologue);
+    puts(c_prologue);
+    //printf("%s\n", $2); 
+  }  
+}
+;
+
+part3:
+  %empty                    { $$ = template("");}
+| part3 body 
+{ 
+  if (yyerror_count == 0) {
     printf("%s\n", $2); 
   }  
 }
 ;
 
 body: 
-  KW_LET decl ';'          { $$ = template("%s;",$2);}
-| KW_CONST decl_const ';'  { $$ = template("%s;",$2);}              
+  KW_CONST decl_const ';'  { $$ = template("%s;",$2);}              
 | func_decl                
 | commands 
-| KW_CONST defined_func ";;;;"
-| KW_CONST KW_START ASSIGN '(' ')' ':' KW_INT KW_MAIN_ASSIGN '{' main_body '}'
+| defined_func 
+| KW_CONST KW_START ASSIGN '(' ')' ':' KW_INT KW_MAIN_ASSIGN '{' main_body '}'{ $$ = template("int main(){\n %s \n}",$10);}
 ;
 
-defined_func:  KW_INT     {$$ = template("int");}
+defined_func:  
+  F_readS '(' ')'';'                  { $$ = template("readString();");}
+| F_readI '(' ')'';'                  { $$ = template("readInt();");}
+| F_readR '(' ')'';'                  { $$ = template("ReadReal();");}
+| F_writeS '('IDENTIFIER  ')' ';'     { $$ = template("writeString(%s)",$3);}
+| F_writeI '('IDENTIFIER  ')' ';'     { $$ = template("writeInt(%s)",$3);}
+| F_writeR '('IDENTIFIER  ')' ';'     { $$ = template("writeReal(%s)",$3);}
 ;
 
 commands:
   func_call ';'                           { $$ = template("%s;",$1);}
+| KW_LET decl ';'                         { $$ = template("%s;",$2);}
 | IDENTIFIER ASSIGN expr ';'              { $$ = template("%s = %s ;",$1,$3);}
 | return_expr ';'
 | KW_IF if_state KW_FI                    { $$ = template("%s",$2);}
@@ -145,7 +169,6 @@ const_type:
 
 func_body:
   %empty                    { $$ = template("");}
-| KW_LET decl ';' func_body { $$ = template("%s;\n %s",$2,$4);}
 | commands func_body        { $$ = template("%s \n %s",$1,$2);}
 
 ;

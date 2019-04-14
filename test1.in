@@ -1,5 +1,30 @@
 
+readString();
+readReal();
+writeString(s);
 
+const start <- () : int => {
+ let x ,y <- 15  : int;
+ x <- 2+3-4*(4-5)/7;
+ cube(b+3,x);
+  if(a<=b) and (d<=c)then 
+  g <-(not 15) % cube(b+3,x);
+  g <-(not 15) % cube(b+3,x);
+  while(d<=c)loop
+   g <-(not 15) % cube(b+3,x);
+   g <-(not 15) % cube(b+3,x); 
+    if(a<=b) and (d<=c)then 
+  g <-(not 15) % cube(b+3,x);fi
+  pool
+ else
+  g <- 5;
+   if(a<=b) and (d<=c)then 
+  g <-(not 15) % cube(b+3,x);fi
+
+ fi
+ return x*x;
+}
+(*)
 while(d<=c)loop
    g <-(not 15) % cube(b+3,x);
    g <-(not 15) % cube(b+3,x); 
@@ -26,7 +51,7 @@ const f1 <- (x,y,c:real ,s[]:string):real{
  fi
  return x*x;   }
 
-(*)
+
 
 a <-(a<=b) and (d<=c);
 g <-(not 15) % cube(b+3,x);
@@ -45,7 +70,9 @@ return 16;
 
 --- const f1 <- (x,y,c:real ,s[]:string):real{ return x*x;} -- TO FIX
 -- Return ypr undefined when return missing
--- t
+-- t*
+-- ORDER OF PARTS
+-- write String char*
 
 
 expr:

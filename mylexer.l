@@ -44,6 +44,12 @@ let			return KW_LET;
 return		return KW_RETURN;
 start		return KW_START;
 
+readString  return F_readS;
+readInt  	return F_readI;
+readReal  	return F_readR;
+writeString return F_writeS;
+writeInt  	return F_writeI;
+writeReal  	return F_writeR;
 
 {ID}        { yylval.str = strdup(yytext); return IDENTIFIER; }        
 {NUMBER}    { yylval.str = strdup(yytext); return POSINT; }
