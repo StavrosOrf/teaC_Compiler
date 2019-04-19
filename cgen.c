@@ -42,7 +42,7 @@ char* template(const char* pat, ...)
 */
  void yyerror (char const *pat, ...) {
  	va_list arg;
-  fprintf (stderr, "line %d: ", line_num);
+  fprintf (stderr, "Syntax error in line %d: ", line_num);
 
   va_start(arg, pat);
   vfprintf(stderr, pat, arg);
@@ -52,7 +52,10 @@ char* template(const char* pat, ...)
 int yyerror_count = 0;
 
 const char* c_prologue = 
+"#include <stdio.h>\n"
+"#include <string.h>\n"
 "#include \"teaclib.h\"\n"
+"#include \"cgen.h\"\n"
 "\n"
 ;
 

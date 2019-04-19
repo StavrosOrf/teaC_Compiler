@@ -1,8 +1,44 @@
 
-readString();
-readReal();
-writeString(s);
+const message <- "Hello world!":string;
 
+const cube <- (i: int): int => {
+  return i*i*i;
+}   
+
+const start <- (): int => {
+writeString(message);
+}
+
+(*)
+const t <- " ahashhjj" : string;
+let x <- 15 , y : real;
+let x ,y <- 15  : int;
+let k <- 1.55 : real;
+const t <- "ahashhjj" : string;
+const t <- true : bool;
+let s[80]: string;
+;:
+const f1 <- (x,y,c:real ,s[]:string):real =>{ 
+ let x ,y <- 15  : int;
+ x <- 2+3-4*(4-5)/7;
+ cube(b+3,x);
+  if(a<=b) and (d<=c)then 
+  g <-(not 15) % cube(b3,x);
+  g <-(not 15) % cube(b+3,x);
+  while(d<=c)loop
+   g <-(not 15) % cube(b+3);
+   g <-(not 15) % cube(b+3,x);
+    if(a<=b) and (d<=c)then 
+  g <-(not 15) % cube(b+3,x);fi
+  pool
+ else
+  g <- 5;
+   if(a<=b) and (d<=c)then 
+  g <-(not 15) % cube(b+3,x);fi
+
+ fi
+ return x*x;   }
+;:
 const start <- () : int => {
  let x ,y <- 15  : int;
  x <- 2+3-4*(4-5)/7;
@@ -22,9 +58,14 @@ const start <- () : int => {
   g <-(not 15) % cube(b+3,x);fi
 
  fi
+ readString();
+ readReal();
+ writeString(s);
  return x*x;
 }
-(*)
+
+
+
 while(d<=c)loop
    g <-(not 15) % cube(b+3,x);
    g <-(not 15) % cube(b+3,x); 
@@ -67,14 +108,16 @@ const t <- true : bool;
 let s[80]: string;
 return 16;
 
-
+--Strings \n \t \r
 --- const f1 <- (x,y,c:real ,s[]:string):real{ return x*x;} -- TO FIX
--- Return ypr undefined when return missing
+-- func parameter validity check
 -- t*
--- ORDER OF PARTS
 -- write String char*
+-- 
 
-
+-- presentation!!!!!!!!!!!!!!!
+-- SHOW CORRECT STRINGS 
+--
 expr:
  POSINT
 | REAL
@@ -86,6 +129,4 @@ expr:
 | '+' expr                           { $$ = template("(+%s)",$2); }
 | '-' expr                           { $$ = template("(-%s)",$2); }
 | KW_NOT expr                           { $$ = template("(!%s)",$2); }
-| expr infix_operator expr           { $$ = template("%s %s %s", $1,$2, $3); }
-;
-(*)
+| expr infix_operator expr           { $$ = template("%s %s %s", $1,$2, $3); }(*)

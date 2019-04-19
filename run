@@ -4,5 +4,8 @@ bison -d -v -r all myparser.y
 flex mylexer.l
 gcc -o mycomp lex.yy.c myparser.tab.c cgen.c -lfl
 ./mycomp < test1.in >ex.c
-
+#./mycomp < ./test/useless.tc >ex.c
 cat ex.c
+
+# gcc -o ex -std=c99 -Wall ex.c
+# ./ex

@@ -55,7 +55,7 @@ extern int yydebug;
     KW_REAL = 265,
     KW_BOOL = 266,
     KW_STRING = 267,
-    KW_MAIN_ASSIGN = 268,
+    KW_FUNC = 268,
     KW_IF = 269,
     KW_THEN = 270,
     KW_ELSE = 271,
@@ -72,14 +72,15 @@ extern int yydebug;
     KW_LET = 282,
     KW_RETURN = 283,
     KW_START = 284,
-    KW_TRUE = 285,
-    KW_FALSE = 286,
-    F_readS = 287,
-    F_readI = 288,
-    F_readR = 289,
-    F_writeS = 290,
-    F_writeI = 291,
-    F_writeR = 292
+    KW_LIMITER = 285,
+    KW_TRUE = 286,
+    KW_FALSE = 287,
+    F_readS = 288,
+    F_readI = 289,
+    F_readR = 290,
+    F_writeS = 291,
+    F_writeI = 292,
+    F_writeR = 293
   };
 #endif
 
@@ -93,7 +94,7 @@ union YYSTYPE
   char* str;
   int num;
 
-#line 97 "myparser.tab.h" /* yacc.c:1909  */
+#line 98 "myparser.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

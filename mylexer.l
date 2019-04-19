@@ -13,9 +13,9 @@ DIGIT   [0-9]
 NUMBER  {DIGIT}{DIGIT}*
 DECIMAL ("."{NUMBER})|({NUMBER}("."{NUMBER}?)?)
 REAL    {DECIMAL}([eE][+-]?{NUMBER})?
-STRING  \"[^\\'\n\"]*\"
+STRING  \"[^\'\n\"]*\"
 ARRAY	("["{NUMBER}"]")
-
+SYMBOLS [\"|\t|\r|\n|\\|\"]
 
 
 %x comment 
@@ -76,7 +76,8 @@ writeReal  	return F_writeR;
 "!="		{return  KW_NOT_EQL;}
 "<"			return '<';
 "<="		{return KW_LESS_EQL;}
-"=>"		{return KW_MAIN_ASSIGN;}
+"=>"		{return KW_FUNC;}
+";:"		{return KW_LIMITER;}
 ";"			return ';';
 ":"			return ':';
 ","			return ',';
