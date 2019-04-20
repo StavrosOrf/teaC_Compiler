@@ -31,6 +31,7 @@
 %token <str> KW_IF
 %token <str> KW_THEN
 %token <str> KW_ELSE
+%token <str> KW_ELSE_IF
 %token <str> KW_AND
 %token <str> KW_OR
 %token <str> KW_NOT
@@ -76,8 +77,7 @@
 %type <str> if_state
 %type <str> while_state
 %type <str> main_body
-%type <str> part2
-%type <str> part1
+%type <str> decl_part
 
 
 %left KW_OR
@@ -91,24 +91,21 @@
 
 input:  
   %empty
-| part1 part2 main_func 
+| decl_part main_func 
 { 
   if (yyerror_count == 0) {
     puts(c_prologue);
-    printf("%s\n\n%s\n\n%s \n", $1,$2,$3); 
+    printf("%s\n\n%s \n", $1,$2); 
   }  
 }
 ;
 
-part1:
+decl_part:
   %empty                          { $$ = template("");}
-| part1  KW_CONST decl_const ';'  { $$ = template("%s\n%s;",$1,$3);} 
-| part1 KW_LET decl ';'           { $$ = template("%s\n%s;",$1,$3);}
-;
-
-part2:
-  %empty                          { $$ = template("");}
-| part2 func_decl                 { $$ = template("%s%s",$1,$2);}
+| decl_part  KW_CONST decl_const ';'  { $$ = template("%s\n%s;",$1,$3);} 
+| decl_part KW_LET decl ';'           { $$ = template("%s\n%s;",$1,$3);}
+| decl_part func_decl ';'             { $$ = template("%s\n\n%s",$1,$2);}
+| decl_part func_decl                 { $$ = template("%s\n\n%s",$1,$2);}
 ;
 
 main_func:               
@@ -116,22 +113,22 @@ main_func:
 ;
 
 defined_func:  
-  F_readS '(' ')'';'                  { $$ = template("readString();");}
-| F_readI '(' ')'';'                  { $$ = template("readInt();");}
-| F_readR '(' ')'';'                  { $$ = template("ReadReal();");}
-| F_writeS '('IDENTIFIER  ')' ';'     { $$ = template("writeString(%s);",$3);}
-| F_writeI '('IDENTIFIER  ')' ';'     { $$ = template("writeInt(%s);",$3);}
-| F_writeR '('IDENTIFIER  ')' ';'     { $$ = template("writeReal(%s);",$3);}
+  F_readS '(' ')'                  { $$ = template("readString()");}
+| F_readI '(' ')'                  { $$ = template("readInt()");}
+| F_readR '(' ')'                  { $$ = template("ReadReal()");}
+| F_writeS '('expr')'              { $$ = template("writeString(%s)",$3);}
+| F_writeI '('expr')'              { $$ = template("writeInt(%s)",$3);}
+| F_writeR '('expr')'              { $$ = template("writeReal(%s)",$3);}
 ;
 
 commands:
   func_call ';'                           { $$ = template("%s;",$1);}
-| defined_func
+| defined_func ';'                        { $$ = template("%s;",$1);}
 | KW_LET decl ';'                         { $$ = template("%s;",$2);}
 | IDENTIFIER ASSIGN expr ';'              { $$ = template("%s = %s ;",$1,$3);}
 | return_expr ';'
-| KW_IF if_state KW_FI                    { $$ = template("%s",$2);}
-| KW_WHILE expr KW_LOOP while_state KW_POOL  { $$ = template("while(%s){\n %s \n} ",$2,$4);}
+| KW_IF expr KW_THEN if_state KW_FI ';'          { $$ = template("if(%s){\n %s}",$2,$4);}
+| KW_WHILE expr KW_LOOP while_state KW_POOL ';'  { $$ = template("while(%s){\n %s \n} ",$2,$4);}
 ;
 
 main_body:
@@ -144,10 +141,10 @@ while_state:
 | commands  while_state  { $$ = template("  %s\n %s",$1,$2);}
 
 if_state: 
-  %empty                 { $$ = template("");}
-| expr KW_THEN if_state  { $$ = template("if(%s){\n %s}",$1,$3);}
-| commands  if_state     { $$ = template(" %s\n %s",$1,$2);}
-| KW_ELSE if_state       { $$ = template("}else{ \n %s",$2);}
+  %empty                              { $$ = template("");}
+| commands  if_state                  { $$ = template(" %s\n %s",$1,$2);}
+| KW_ELSE_IF expr KW_THEN if_state    { $$ = template("}else if(%s){ \n %s",$2,$4);}
+| KW_ELSE if_state                    { $$ = template("}else{ \n %s",$2);}
 ;
 
 type:
@@ -196,11 +193,10 @@ func_par_decl:
 | IDENTIFIER ':' type  func_par_decl        { $$ = template("%s %s %s",$4,$3,$1); } 
 
 | IDENTIFIER  ',' func_par_decl                 { $$ = template("%s,%s ",$3,$1); } 
-| IDENTIFIER '['']'  ',' func_par_decl          { $$ = template("%s %s[]",$5,$1); } 
-| IDENTIFIER '['']' ':' type ',' func_par_decl  { $$ = template("%s %s %s[]",$7,$5,$1); }        
-| IDENTIFIER ':' type  ',' func_par_decl        { $$ = template("%s %s %s",$5,$3,$1); } 
+| IDENTIFIER '['']'  ',' func_par_decl          { $$ = template("%s, %s[]",$5,$1); } 
+| IDENTIFIER '['']' ':' type ',' func_par_decl  { $$ = template("%s, %s %s[]",$7,$5,$1); }        
+| IDENTIFIER ':' type  ',' func_par_decl        { $$ = template("%s, %s %s",$5,$3,$1); } 
 ;
-
 
 
 data:
@@ -231,13 +227,16 @@ decl:
 
 
 expr:
- POSINT
+  POSINT
+| KW_TRUE   { $$ = template("1"); }
+| KW_FALSE  { $$ = template("0"); }
+| STRING
 | REAL
 | IDENTIFIER
 | IDENTIFIER ARRAY        { $$ = template("%s%s", $1,$2); }
+| defined_func
 | func_call
 | '(' expr ')'            { $$ = template("(%s)", $2); }
-
 | '+' expr                { $$ = template("(+%s)",$2); }
 | '-' expr                { $$ = template("(-%s)",$2); }
 | KW_NOT expr             { $$ = template("(!%s)",$2); }

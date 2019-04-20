@@ -3,9 +3,16 @@
 bison -d -v -r all myparser.y
 flex mylexer.l
 gcc -o mycomp lex.yy.c myparser.tab.c cgen.c -lfl
-./mycomp < test1.in >ex.c
+#./mycomp < test1.in >ex.c
 #./mycomp < ./test/useless.tc >ex.c
+./mycomp < ./test/fibonnaci.tc >ex.c
 cat ex.c
 
-# gcc -o ex -std=c99 -Wall ex.c
-# ./ex
+gcc -o ex -std=c99 -Wall ex.c
+./ex
+
+
+# NOTES !!!
+#after each function declaration, if state and while use ';' 
+#I am not sure if this is was a requirement..
+#Should "else if" command be supported?

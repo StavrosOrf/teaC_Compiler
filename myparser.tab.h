@@ -59,28 +59,29 @@ extern int yydebug;
     KW_IF = 269,
     KW_THEN = 270,
     KW_ELSE = 271,
-    KW_AND = 272,
-    KW_OR = 273,
-    KW_NOT = 274,
-    KW_NOT_EQL = 275,
-    KW_LESS_EQL = 276,
-    KW_FI = 277,
-    KW_WHILE = 278,
-    KW_LOOP = 279,
-    KW_POOL = 280,
-    KW_CONST = 281,
-    KW_LET = 282,
-    KW_RETURN = 283,
-    KW_START = 284,
-    KW_LIMITER = 285,
-    KW_TRUE = 286,
-    KW_FALSE = 287,
-    F_readS = 288,
-    F_readI = 289,
-    F_readR = 290,
-    F_writeS = 291,
-    F_writeI = 292,
-    F_writeR = 293
+    KW_ELSE_IF = 272,
+    KW_AND = 273,
+    KW_OR = 274,
+    KW_NOT = 275,
+    KW_NOT_EQL = 276,
+    KW_LESS_EQL = 277,
+    KW_FI = 278,
+    KW_WHILE = 279,
+    KW_LOOP = 280,
+    KW_POOL = 281,
+    KW_CONST = 282,
+    KW_LET = 283,
+    KW_RETURN = 284,
+    KW_START = 285,
+    KW_LIMITER = 286,
+    KW_TRUE = 287,
+    KW_FALSE = 288,
+    F_readS = 289,
+    F_readI = 290,
+    F_readR = 291,
+    F_writeS = 292,
+    F_writeI = 293,
+    F_writeR = 294
   };
 #endif
 
@@ -94,7 +95,7 @@ union YYSTYPE
   char* str;
   int num;
 
-#line 98 "myparser.tab.h" /* yacc.c:1909  */
+#line 99 "myparser.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

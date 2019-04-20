@@ -32,6 +32,7 @@ or	 		return KW_OR;
 not			return KW_NOT;
 if 			return KW_IF;
 else 		return KW_ELSE;
+"else if" 	return KW_ELSE_IF;
 then		return KW_THEN;
 true		return KW_TRUE;
 false		return KW_FALSE;
@@ -89,7 +90,7 @@ writeReal  	return F_writeR;
 <comment>[^*\n]*        /* eat anything that's not a '*' */
 <comment>"*"+[^*)\n]*   /* eat up '*'s not followed by '/'s */
 <comment>\n             ++line_num;
-<comment>"*"+"*)"        { BEGIN(INITIAL); }
+<comment>"*"+")"        { BEGIN(INITIAL); }
 
 [ \r\t]	/* skip whitespace */
 \n 			++line_num;
